@@ -14,6 +14,7 @@ app.get("/", async (req, res) => {
       message: "Product added successfully",
       data: products,
     });
+    res.send(products);
   } catch (error) {
     console.error(error);
   }
