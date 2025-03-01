@@ -1,31 +1,41 @@
 import mongoose, { Schema } from "mongoose";
 
 const ProductSchema = new Schema({
-  name: {
+  productName: {
     type: String,
+    required: true,
   },
-  category: {
+  productCategory: {
     type: String,
+    required: true,
   },
-  price: {
-    type: String,
-  },
-  images: {
-    data: Buffer,
-    contentType: String,
-  },
-  description: {
-    type: String,
-  },
-  sizes: {
-    type: Array,
-  },
-
-  inStock: {
-    type: Boolean,
-  },
-  StockQuantity: {
+  productPrice: {
     type: Number,
+    required: true,
+  },
+  productImages: {
+    type: [String],
+    required: true,
+  },
+  productDescription: {
+    type: String,
+    required: true,
+  },
+  productSizes: {
+    type: [String], // Array of size strings
+    required: true,
+  },
+  productInStock: {
+    type: Boolean,
+    default: true,
+  },
+  stockQuantity: {
+    type: Number,
+    default: 0, // Default to 0 if not provided
+  },
+  carted: {
+    type: Boolean,
+    default: false,
   },
 });
 

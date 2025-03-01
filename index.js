@@ -1,51 +1,83 @@
 import express from "express";
 import { connectDB } from "./config/db.js";
 import { Products } from "./models/products.model.js";
-// import { Products } from "./models/products.model";
+import cors from "cors";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import dotenv from "dotenv"; 
+
+dotenv.config();
+
 const app = express();
 const PORT = 5000;
+
+app.use(cors({ origin: "*" }));
 app.use(express.json());
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "products", // Cloudinary folder name
+    format: async () => "png", // or 'jpeg', 'jpg'
+    public_id: (req, file) => file.originalname.split(".")[0], // Filename without extension
+  },
+});
+
+const upload = multer({ storage });
 
 app.get("/", async (req, res) => {
   try {
     const products = await Products.find({});
-    res.status(400).json({
+    res.status(200).json({
       success: true,
-      message: "Product added successfully",
+      message: "Products fetched successfully",
       data: products,
     });
-    res.send(products);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching products:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 });
 
-app.post("/", async (req, res) => {
-  const product = req.body;
-  const newProduct = new Products(product);
-  console.log(newProduct);
-
+app.post("/", upload.array("file", 5), async (req, res) => {
   try {
+    const product = req.body;
+
+    // Extract Cloudinary URLs from uploaded files
+    const imageUrls = req.files.map((file) => file.path);
+
+    const newProduct = new Products({
+      ...product,
+      productImages: imageUrls,
+    });
+
+    console.log("New Product:", newProduct);
     await newProduct.save();
-    res.status(200).json({
+
+    res.status(201).json({
       success: true,
       message: "Product added successfully",
       data: newProduct,
     });
   } catch (err) {
-    console.error("Error in entering task", err);
-    res.status(500).send({ success: false, message: "Error in Error" });
+    console.error("Error in adding product:", err);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 });
 
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server is listening on this ${PORT}`);
-      console.log(`http://localhost:${PORT}`);
+      console.log(`Server is running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.log("error in database");
-    console.error(err);
+    console.error("Database Connection Error:", err);
   });
