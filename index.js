@@ -5,7 +5,7 @@ import cors from "cors";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import dotenv from "dotenv"; 
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -46,9 +46,14 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.post("/", upload.array("file", 5), async (req, res) => {
+app.post("/", upload.array("productImages", 5), async (req, res) => {
   try {
     const product = req.body;
+    if (!Array.isArray(req.body.productSizes)) {
+      req.body.productSizes = req.body.productSizes
+        ? [req.body.productSizes]
+        : [];
+    }
 
     // Extract Cloudinary URLs from uploaded files
     const imageUrls = req.files.map((file) => file.path);
