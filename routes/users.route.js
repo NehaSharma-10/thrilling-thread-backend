@@ -11,6 +11,22 @@ const router = express.Router();
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(cookieParser()); // Middleware to parse cookies
+
+// get all users
+router.get("/", async (req, res) => {
+  try {
+    const users = await Users.find({});
+    res.status(200).json({
+      success: true,
+      message: "Users fetched successfully",
+      data: users,
+    });
+    res.send(users);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
 // user Sign up
 router.post("/signup", async (req, res) => {
   try {

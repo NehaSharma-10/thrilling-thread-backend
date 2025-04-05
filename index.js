@@ -42,10 +42,12 @@ app.use("/", VerifyUser);
 connectDB()
   .then(() => {
     console.log(`Database Connected Successfully`);
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
-    });
   })
   .catch((err) => {
     console.error("Database Connection Error:", err);
   });
+
+app.listen(PORT, () => {
+  console.log(`Server is running on ${process.env.DOMAIN}`);
+});
+  

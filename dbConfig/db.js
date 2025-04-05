@@ -12,7 +12,9 @@ export const connectDB = async () => {
   }
 
   try {
-    await mongoose.connect(process.env.MONGO_URI); // No extra options needed in MongoDB v4+
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: "thrilling-thread",
+    });
 
     mongoose.connection.once("connection", () => {
       console.log("DB Connected Successfully");
