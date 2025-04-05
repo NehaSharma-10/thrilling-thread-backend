@@ -33,10 +33,6 @@ const ProductSchema = new Schema({
     type: Number,
     default: 0, // Default to 0 if not provided
   },
-  carted: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 export const Products = mongoose.model("Products", ProductSchema);
