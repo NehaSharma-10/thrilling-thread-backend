@@ -15,7 +15,7 @@ const PORT = 5000;
 // ✅ Apply CORS middleware BEFORE routes
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://thrillingthread.vercel.app/",
     credentials: true,
   })
 );
@@ -24,7 +24,7 @@ app.use(
 app.options(
   "*",
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://thrillingthread.vercel.app/",
     credentials: true,
   })
 );
@@ -50,4 +50,3 @@ connectDB()
 app.listen(PORT, () => {
   console.log(`Server is running on ${process.env.DOMAIN}`);
 });
-  
