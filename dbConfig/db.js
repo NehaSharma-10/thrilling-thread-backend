@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-let isConnected = false; // Prevent multiple connections
+let isConnected = false;
 
 export const connectDB = async () => {
   if (isConnected) {

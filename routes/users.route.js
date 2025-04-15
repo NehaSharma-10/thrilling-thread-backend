@@ -21,9 +21,8 @@ router.get("/", async (req, res) => {
       message: "Users fetched successfully",
       data: users,
     });
-    res.send(users);
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching Users:", error);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 });
@@ -135,7 +134,6 @@ router.get("/profile", async (req, res) => {
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized. Invalid token." });
     }
-
     const user = await Users.findOne({ _id: userId }).select("-password");
 
     if (!user) {

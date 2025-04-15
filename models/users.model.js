@@ -41,16 +41,15 @@ const UserSchema = new Schema({
   wishlist: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "Products",
     },
   ],
-
   // 📦 Orders
   orders: [
     {
       orderId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
+        ref: "Orders",
       },
     },
   ],

@@ -8,8 +8,8 @@ export const getDataFromToken = (req) => {
   try {
     const token = req.cookies.token || ""; // Access cookie directly
     const cookie = req.cookies;
-    console.log(token);
-    console.log(cookie);
+    console.log("Token : ", token);
+    console.log("Cookie: ", cookie);
     if (!token) {
       throw new Error("No token found");
     }

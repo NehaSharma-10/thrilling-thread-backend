@@ -3,6 +3,7 @@ import { connectDB } from "./dbConfig/db.js";
 import productRoutes from "./routes/products.route.js";
 import UserRoutes from "./routes/users.route.js";
 import VerifyUser from "./routes/verify.email.route.js";
+import CartRoutes from "./routes/cart.route.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -15,7 +16,7 @@ const PORT = 5000;
 // ✅ Apply CORS middleware BEFORE routes
 app.use(
   cors({
-    origin: "https://thrillingthread.vercel.app",
+    origin: ["https://thrillingthread.vercel.app", "http://localhost:3000"],
     credentials: true,
   })
 );
@@ -24,7 +25,7 @@ app.use(
 app.options(
   "*",
   cors({
-    origin: "https://thrillingthread.vercel.app",
+    origin: ["https://thrillingthread.vercel.app", "http://localhost:3000"],
     credentials: true,
   })
 );
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use("/api/products", productRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/", VerifyUser);
+app.use("/api", CartRoutes);
 
 // ✅ Connect DB and Start server
 connectDB()

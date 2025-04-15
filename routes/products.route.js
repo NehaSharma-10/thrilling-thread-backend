@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v4 as uuidv4 } from "uuid";
+
 dotenv.config();
 
 const router = express.Router();
@@ -27,7 +29,7 @@ const storage = new CloudinaryStorage({
     return {
       folder: "products",
       format: ["png", "jpeg", "jpg", "webp"].includes(ext) ? ext : "png",
-      public_id: file.originalname.split(".")[0],
+      public_id: `${file.originalname.split(".")[0]}-${uuidv4()}`, // ✅ adds unique ID
     };
   },
 });
@@ -38,22 +40,25 @@ const upload = multer({ storage });
 router.get("/", async (req, res) => {
   try {
     const products = await Products.find({});
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Products fetched successfully",
       data: products,
     });
-    res.send(products);
   } catch (error) {
-    console.error("Error fetching products:", error);
-    res.status(500).json({ success: false, message: "Server Error" });
+    return res.status(500).json({
+      success: false,
+      message: `Error in Product Fetching, Server Error , ${error}`,
+    });
   }
 });
 
 // Submit a new product with images
-router.post("/submit", upload.array("productImages", 5), async (req, res) => {
+router.post("/submit", upload.array("productImages", 7), async (req, res) => {
   try {
     const product = req.body;
+    const files = req.files;
+    // console.log(files);
     if (!Array.isArray(req.body.productSizes)) {
       req.body.productSizes = req.body.productSizes
         ? [req.body.productSizes]
@@ -61,6 +66,7 @@ router.post("/submit", upload.array("productImages", 5), async (req, res) => {
     }
 
     const imageUrls = req.files.map((file) => file.path);
+    // console.log(imageUrls);
     const newProduct = new Products({
       ...product,
       productImages: imageUrls,
