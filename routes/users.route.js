@@ -93,12 +93,11 @@ router.post("/login", async (req, res) => {
     res
       .status(200)
       .cookie("token", token, {
-        // httpOnly: true,
-        // secure: true, // ✅ required for HTTPS
-        // sameSite: "none", // ✅ required for cross-site cookies
-        // secure: process.env.NODE_ENV === "production",
-        // sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
+        path: "/",
+        maxAge: 24 * 60 * 60 * 1000,
       })
       .json({
         message: "Logged in Successfully",
