@@ -88,22 +88,16 @@ router.post("/login", async (req, res) => {
       expiresIn: "1d",
     });
 
+    res.cookie("token", token, {
+      maxAge: 24 * 60 * 60 * 1000,
+    });
     // console.log(`token : ${token}`);
 
-    res
-      .status(200)
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
-        path: "/",
-        maxAge: 24 * 60 * 60 * 1000,
-      })
-      .json({
-        message: "Logged in Successfully",
-        success: true,
-        token: token,
-      });
+    res.status(200).json({
+      message: "Logged in Successfully",
+      success: true,
+      token: token,
+    });
   } catch (error) {
     res.status(500).json({
       error: error.message,
