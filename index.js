@@ -16,7 +16,7 @@ const PORT = 5000;
 // ✅ Apply CORS middleware BEFORE routes
 app.use(
   cors({
-    origin: ["https://thrillingthread.vercel.app", "http://localhost:3000"],
+    origin: ["https://thrillingthread.vercel.app", "http://localhost:5000"],
     credentials: true,
   })
 );
@@ -25,7 +25,7 @@ app.use(
 app.options(
   "*",
   cors({
-    origin: ["https://thrillingthread.vercel.app", "http://localhost:3000"],
+    origin: ["https://thrillingthread.vercel.app", "http://localhost:5000"],
     credentials: true,
   })
 );
